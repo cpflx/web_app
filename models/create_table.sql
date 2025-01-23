@@ -12,7 +12,7 @@ create table if not exists `user` (
     Unique key `idx_user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-REATE TABLE `community` (
+CREATE TABLE `community` (
                                       `id` int(11) NOT NULL AUTO_INCREMENT,
                                       `community_id` int(10) unsigned NOT NULL,
                                       `community_name` varchar(128) COLLATE utf8mb4_general_ci NOT NULL,

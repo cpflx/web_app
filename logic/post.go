@@ -1,19 +1,29 @@
 package logic
 
 import (
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"web_app/dao/redis"
 
 	"web_app/dao/mysql"
 	"web_app/models"
 	"web_app/pkg/snowflake"
 )
 
-func CreatePost(p *models.Post) (err error) {
+func CreatePost(c *gin.Context, p *models.Post) (err error) {
 	// 1. 生成post_id
 	p.ID = snowflake.GetID()
 
 	// 2. 将数据保存到mysql中
-	return mysql.CreatePost(p)
+	err = mysql.CreatePost(p)
+	if err != nil {
+		return err
+	}
+
+	// 3. 缓存数据到redis中
+	err = redis.CreatePost(c, p.ID)
+
+	return
 }
 
 func GetPostByID(pid int64) (data *models.ApiPostDetail, err error) {
