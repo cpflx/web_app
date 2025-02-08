@@ -2,10 +2,13 @@ package routes
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "web_app/docs"
 
 	"web_app/controller"
 	"web_app/logger"
@@ -16,7 +19,7 @@ import (
 func SetUp() *gin.Engine {
 	r := gin.New()
 	// 重新使用zap新写中间件
-	r.Use(logger.GinLogger(), logger.GinRecovery(true), middleware.RateLimitMiddleware(2*time.Second, 1))
+	r.Use(logger.GinLogger(), logger.GinRecovery(true)) // middleware.RateLimitMiddleware(2*time.Second, 1) 令牌桶限流器
 
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, cast.ToString(snowflake.GetID()))
@@ -27,6 +30,8 @@ func SetUp() *gin.Engine {
 	// 注册业务路由
 	v1.POST("/signUp", controller.SignUpHandler)
 	v1.POST("/login", controller.LoginHandler)
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	v1.Use(middleware.JWTAuthMiddleware())
 	{

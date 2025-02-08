@@ -59,6 +59,17 @@ func GetPostHandler(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
+// GetPostListHandler 帖子列表接口
+// @Summary 帖子列表接口
+// @Description 帖子列表接口
+// @Tags 帖子相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Param object query models.ParamPostList false "查询参数"
+// @Security ApiKeyAuth
+// @Success 200 {object} _ResponsePostList
+// @Router /post [get]
 func GetPostListHandler(c *gin.Context) {
 	// 获取分页参数
 	offset, limit := getPageInfo(c)
